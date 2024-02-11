@@ -9,24 +9,33 @@ Please Note infromation  and resources used in this file will be listed in the l
 2) https://nodejs.org/api/crypto.html
 3) https://developer.ibm.com/articles/secure-javascript-applications-with-web-crypto-api/
 */
+const crypto = require('crypto');
 
-//Import Modules with UTF-16 input and output
-const CryptoJS = require('crypto-js');
-
-// AES encryption function
-function encryptMessage(message, passphrase) 
-{
-  // Encrypt the message 
-  const encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf16.parse(message), CryptoJS.enc.Utf16.parse(passphrase)).toString();
-  return encrypted;
+// Function to generate a secure key from passphrase
+function generateKey(passphrase) {
+  return crypto.createHash('sha256').update(passphrase).digest();
 }
 
-// AES decryption function with UTF-16 input and output
-function decryptMessage(encryptedMessage, passphrase)
-{
-   // Decrypt the message
-   const decrypted = CryptoJS.AES.decrypt(encryptedMessage, CryptoJS.enc.Utf16.parse(passphrase)).toString(CryptoJS.enc.Utf16);
-   return decrypted;
+// AES encryption function
+function encryptMessage(message, passphrase) {
+  const key = generateKey(passphrase);
+  const iv = crypto.randomBytes(16); // Generate a random IV (Initialization Vector)
+  const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
+  let encrypted = cipher.update(message, 'utf8', 'base64');
+  encrypted += cipher.final('base64');
+  return {
+    iv: iv.toString('base64'), // Convert IV to base64 string for storage/transfer
+    encryptedMessage: encrypted
+  };
+}
+
+// AES decryption function
+function decryptMessage(encryptedMessage, passphrase, iv) {
+  const key = generateKey(passphrase);
+  const decipher = crypto.createDecipheriv('aes-256-cbc', key, Buffer.from(iv, 'base64'));
+  let decrypted = decipher.update(encryptedMessage, 'base64', 'utf8');
+  decrypted += decipher.final('utf8');
+  return decrypted;
 }
 
 // Example usage:
@@ -34,9 +43,10 @@ const secretPassphrase = 'supersecretPassphrase'; // Replace with your secret pa
 
 // Sender encrypts the message
 const senderMessage = "Hello, receiver!";
-const encryptedMessage = encryptMessage(senderMessage, secretPassphrase);
+const { iv, encryptedMessage } = encryptMessage(senderMessage, secretPassphrase);
 console.log("Encrypted message:", encryptedMessage);
+console.log("Initialization Vector (IV):", iv);
 
 // Receiver decrypts the message
-const decryptedMessage = decryptMessage(encryptedMessage, secretPassphrase);
+const decryptedMessage = decryptMessage(encryptedMessage, secretPassphrase, iv);
 console.log("Decrypted message:", decryptedMessage);
