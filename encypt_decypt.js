@@ -92,11 +92,12 @@ console.log("Original message:", senderMessage);
 // Alice encrypts passphrase with Bob's public key, then sends to Bob
 const secretPassphrase = "youshallnotpass";
 const encryptedPassphrase = encryptPassphrase(secretPassphrase, bobKeys.publicKey);
-// Send to encryptedPassphrase to Bob here
+// Send to encryptedPassphrase to Bob here (done over insecure channel)
 
 // Bob receives encrypted passphrase from Alice, then decrypts passphrase with Bob's private key
 const decryptedPassphrase = decryptPassphrase(encryptedPassphrase, bobKeys.privateKey);
 console.log("Decrypted passphrase:", decryptedPassphrase.toString());
+// Now they should both have the passphrase, successfully shared over an insecure channel
 
 // Sender (Alice) encrypts the message with secretPassphrase
 const { iv, encryptedMessage } = encryptMessage(senderMessage, decryptedPassphrase.toString());
