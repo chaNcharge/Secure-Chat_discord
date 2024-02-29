@@ -1,4 +1,30 @@
 /**
+ * Most functions borrowed from examples at SubtleCrypto docs
+ * https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto
+ */
+
+/** 
+* Convert an ArrayBuffer into a string
+* from https://developer.chrome.com/blog/how-to-convert-arraybuffer-to-and-from-string/
+*/
+function ab2str(buf) {
+    return String.fromCharCode.apply(null, new Uint8Array(buf));
+}
+
+/*
+Convert a string into an ArrayBuffer
+from https://developers.google.com/web/updates/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
+*/
+function str2ab(str) {
+    const buf = new ArrayBuffer(str.length);
+    const bufView = new Uint8Array(buf);
+    for (let i = 0, strLen = str.length; i < strLen; i++) {
+        bufView[i] = str.charCodeAt(i);
+    }
+    return buf;
+}
+
+/**
  * Creates RSA keypair using Web Crypto API's SubtleCrypto interface.
  * @param {number} modulusLength The length of the modulus in bits
  * @returns {Promise<CryptoKeyPair>} A promise that resolves to an object containing the public and private keys
@@ -17,25 +43,80 @@ export async function createKeyPair(modulusLength) {
     return keyPair;
 }
 
+/**
+ * Export key CryptoKey object to string
+ * @param {CryptoKey} key The CryptoKey object to export
+ * @param {string} keyType Two options, "public" or "private" depending on type of key format
+ * @returns {Promise<string>} A promise resolving to a string encoded in base64 of the key object
+ */
 export async function exportKeyToString(key, keyType) {
-    const exportedKey = await window.crypto.subtle.exportKey(
-        keyType === 'public' ? 'spki' : 'pkcs8',
-        key
-    );
-    const exportedKeyArray = new Uint8Array(exportedKey);
-    const exportedKeyString = btoa(String.fromCharCode.apply(null, exportedKeyArray));
-    return exportedKeyString;
+    if (keyType === "private") {
+        const exported = await window.crypto.subtle.exportKey("pkcs8", key);
+        const exportedAsString = ab2str(exported);
+        const exportedAsBase64 = window.btoa(exportedAsString);
+        const pemExported = `-----BEGIN PRIVATE KEY-----\n${exportedAsBase64}\n-----END PRIVATE KEY-----`;
+        return pemExported;
+    } else {
+        const exported = await window.crypto.subtle.exportKey("spki", key);
+        const exportedAsString = ab2str(exported);
+        const exportedAsBase64 = window.btoa(exportedAsString);
+        const pemExported = `-----BEGIN PUBLIC KEY-----\n${exportedAsBase64}\n-----END PUBLIC KEY-----`;
+        return pemExported;
+    }
 }
 
-export async function importStringToKey(keyString, keyType) {
-    const binaryString = atob(keyString);
-    const keyData = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-        keyData[i] = binaryString.charCodeAt(i);
+/**
+ * Import base64 encoded string of a CryptoKey object
+ * @param {string} pem A CryptoKey base64 encoded string
+ * @param {string} keyType Two options, "public" or "private" depending on type of key format
+ * @returns {Promise<CryptoKey>} A promise resolving to a CryptoKey object
+ */
+export async function importStringToKey(pem, keyType) {
+    if (keyType === "public") {
+        // fetch the part of the PEM string between header and footer
+        const pemHeader = "-----BEGIN PUBLIC KEY-----";
+        const pemFooter = "-----END PUBLIC KEY-----";
+        const pemContents = pem.substring(
+            pemHeader.length,
+            pem.length - pemFooter.length - 1,
+        );
+        // base64 decode the string to get the binary data
+        const binaryDerString = window.atob(pemContents);
+        // convert from a binary string to an ArrayBuffer
+        const binaryDer = str2ab(binaryDerString);
+
+        return window.crypto.subtle.importKey(
+            "spki",
+            binaryDer,
+            {
+                name: "RSA-OAEP",
+                hash: "SHA-256",
+            },
+            true,
+            ["encrypt"],
+        );
+    } else {
+        // fetch the part of the PEM string between header and footer
+        const pemHeader = "-----BEGIN PRIVATE KEY-----";
+        const pemFooter = "-----END PRIVATE KEY-----";
+        const pemContents = pem.substring(
+            pemHeader.length,
+            pem.length - pemFooter.length - 1,
+        );
+        // base64 decode the string to get the binary data
+        const binaryDerString = window.atob(pemContents);
+        // convert from a binary string to an ArrayBuffer
+        const binaryDer = str2ab(binaryDerString);
+
+        return window.crypto.subtle.importKey(
+            "pkcs8",
+            binaryDer,
+            {
+                name: "RSA-PSS",
+                hash: "SHA-256",
+            },
+            true,
+            ["decrypt"],
+        );
     }
-    const importedKey = await window.crypto.subtle.importKey('spki' === keyType ? 'spki' : 'pkcs8', keyData.buffer, {
-        name: 'RSA-OAEP',
-        hash: { name: 'SHA-256' }
-    }, true, keyType === 'public' ? ['encrypt', 'wrapKey'] : ['decrypt', 'unwrapKey']);
-    return importedKey;
 }

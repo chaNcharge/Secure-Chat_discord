@@ -1,3 +1,5 @@
+/* Template file only */
+
 export default function EncryptInput() {
     function handleClick() {
         function MySearchInput(props) {
