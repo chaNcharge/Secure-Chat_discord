@@ -1,25 +1,41 @@
-const crypto = require("crypto");
-const fs = require("fs");
-
 /**
- * Creates RSA keypair in the given `filepath` and appends user ID
- * at the end of the file name. ID should be the user's Discord user ID.
- * @param {string} filepath The directory to where the keys will be generated
- * @param {string | number} id The user id of the user, to be appended in the file name
+ * Creates RSA keypair using Web Crypto API's SubtleCrypto interface.
+ * @param {number} modulusLength The length of the modulus in bits
+ * @returns {Promise<CryptoKeyPair>} A promise that resolves to an object containing the public and private keys
  */
-export function createKeyPair(filepath, id) {
-    const keys = crypto.generateKeyPairSync('rsa', {
-        modulusLength: 2048,
-        publicKeyEncoding: {
-            type: 'pkcs1',
-            format: 'pem'
+export async function createKeyPair(modulusLength) {
+    let keyPair = await window.crypto.subtle.generateKey(
+        {
+            name: "RSA-OAEP",
+            modulusLength: modulusLength,
+            publicExponent: new Uint8Array([1, 0, 1]),
+            hash: "SHA-256",
         },
-        privateKeyEncoding: {
-            type: 'pkcs1',
-            format: 'pem'
-        }
-    });
-    fs.writeFileSync(filepath + `/public-${id}.pem`, keys.publicKey);
-    fs.writeFileSync(filepath + `/private-${id}.pem`, keys.privateKey);
-    // Notify user to send public key to other user here
+        true,
+        ["encrypt", "decrypt", "wrapKey", "unwrapKey"],
+    );
+    return keyPair;
+}
+
+export async function exportKeyToString(key, keyType) {
+    const exportedKey = await window.crypto.subtle.exportKey(
+        keyType === 'public' ? 'spki' : 'pkcs8',
+        key
+    );
+    const exportedKeyArray = new Uint8Array(exportedKey);
+    const exportedKeyString = btoa(String.fromCharCode.apply(null, exportedKeyArray));
+    return exportedKeyString;
+}
+
+export async function importStringToKey(keyString, keyType) {
+    const binaryString = atob(keyString);
+    const keyData = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+        keyData[i] = binaryString.charCodeAt(i);
+    }
+    const importedKey = await window.crypto.subtle.importKey('spki' === keyType ? 'spki' : 'pkcs8', keyData.buffer, {
+        name: 'RSA-OAEP',
+        hash: { name: 'SHA-256' }
+    }, true, keyType === 'public' ? ['encrypt', 'wrapKey'] : ['decrypt', 'unwrapKey']);
+    return importedKey;
 }
