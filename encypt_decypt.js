@@ -91,17 +91,17 @@ const senderMessage = "Hello, receiver!";
 console.log("Original message:", senderMessage);
 
 // Alice encrypts passphrase with Bob's public key, then sends to Bob
-const secretPassphrase = "youshallnotpass";
+const secretPassphrase = "youshallnotpass"; // Alices copy of passphrase, not sent
 const encryptedPassphrase = encryptPassphrase(secretPassphrase, bobKeys.publicKey);
 // Send to encryptedPassphrase to Bob here (done over insecure channel)
 
 // Bob receives encrypted passphrase from Alice, then decrypts passphrase with Bob's private key
-const decryptedPassphrase = decryptPassphrase(encryptedPassphrase, bobKeys.privateKey);
+const decryptedPassphrase = decryptPassphrase(encryptedPassphrase, bobKeys.privateKey); // Bob's copy of passphrase sent encrypted from Alice
 console.log("Decrypted passphrase:", decryptedPassphrase.toString());
 // Now they should both have the passphrase, successfully shared over an insecure channel
 
 // Sender (Alice) encrypts the message with secretPassphrase
-const { iv, encryptedMessage } = encryptMessage(senderMessage, decryptedPassphrase.toString());
+const { iv, encryptedMessage } = encryptMessage(senderMessage, secretPassphrase);
 console.log("Encrypted message:", encryptedMessage);
 console.log("Initialization Vector (IV):", iv);
 

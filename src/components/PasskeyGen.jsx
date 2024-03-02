@@ -12,12 +12,13 @@ export default function PasskeyGen() {
         let userId = userIdModule.getCurrentUser().id;
         BdApi.UI.showConfirmationModal(
             "Create Key",
-            `This will generate an AES key that is encrypted with your public key. You can safely send this to the person you are currently messaging. This will only work in this channel ID: ${channelId}`,
+            `This will generate an AES key that is encrypted with the current DM's public key. This only needs to be done once per user by one user. This will only work in this channel ID: ${channelId} **DO NOT SEND THE KEY THAT BEGINS WITH \`PRIVATE-\`**`,
             {
                 confirmText: "Create",
                 cancelText: "Cancel",
                 onConfirm: () => {
                     (async () => {
+                        // TODO: Change to use recipient's user id, have them enter in the received public key file with system file dialog
                         const pubKeyFile = fs.readFileSync(`${pluginDirectory}/public-${userId}.pem`, 'utf8');
                         const pubKey = await importStringToKey(pubKeyFile, 'public');
                         // Generate a new random key
@@ -29,6 +30,8 @@ export default function PasskeyGen() {
                             true,
                             ["encrypt", "decrypt"],
                         );
+                        // Personal unencrypted copy so the sender can encrypt/decrypt their own messages. They will not send this
+                        fs.writeFileSync(`${pluginDirectory}/PRIVATE-${channelId}.key`, encryptedAESkey);
                         // Encrypt the new AES key
                         const encryptedAESkey = await encryptAESKey(aesKey, pubKey);
                         fs.writeFileSync(`${pluginDirectory}/${channelId}.key`, encryptedAESkey);
