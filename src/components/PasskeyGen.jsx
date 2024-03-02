@@ -4,18 +4,21 @@ import { importStringToKey } from "../lib/RSAKeyCreation";
 
 export default function PasskeyGen() {
     const pluginDirectory = BdApi.Plugins.folder + "/SecureChat";
-    const pubKeyFile = fs.readFileSync(`${pluginDirectory}/public-12345.pem`, 'utf8');
-    const id = 12345; // Placeholder, see index.js
 
     function handleClick() {
+        const SelectedChannelStore = BdApi.Webpack.getStore("SelectedChannelStore");
+        const userIdModule = BdApi.Webpack.getModule(BdApi.Webpack.Filters.byKeys("getCurrentUser"));
+        let channelId = SelectedChannelStore.getChannelId();
+        let userId = userIdModule.getCurrentUser().id;
         BdApi.UI.showConfirmationModal(
             "Create Key",
-            `This will generate an AES key that is encrypted with your public key. You can safely send this to the person you are currently messaging. ID: ${id}`,
+            `This will generate an AES key that is encrypted with your public key. You can safely send this to the person you are currently messaging. This will only work in this channel ID: ${channelId}`,
             {
                 confirmText: "Create",
                 cancelText: "Cancel",
                 onConfirm: () => {
                     (async () => {
+                        const pubKeyFile = fs.readFileSync(`${pluginDirectory}/public-${userId}.pem`, 'utf8');
                         const pubKey = await importStringToKey(pubKeyFile, 'public');
                         // Generate a new random key
                         const aesKey = await window.crypto.subtle.generateKey(
@@ -28,8 +31,8 @@ export default function PasskeyGen() {
                         );
                         // Encrypt the new AES key
                         const encryptedAESkey = await encryptAESKey(aesKey, pubKey);
-                        fs.writeFileSync(`${pluginDirectory}/${id}.key`, encryptedAESkey);
-                        BdApi.UI.showToast(`AES key encrypted and saved as ${id}.key`, { type: "success" });
+                        fs.writeFileSync(`${pluginDirectory}/${channelId}.key`, encryptedAESkey);
+                        BdApi.UI.showToast(`AES key encrypted and saved as ${channelId}.key`, { type: "success" });
                     })();
                 },
                 onCancel: () => console.log("Pressed 'Cancel' or escape")
