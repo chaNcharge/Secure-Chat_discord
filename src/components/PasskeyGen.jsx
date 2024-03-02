@@ -1,4 +1,4 @@
-import { encryptPassphrase } from "../lib/Passphrase";
+import { encryptAESKey } from "../lib/AESKey";
 import fs from "fs";
 import { importStringToKey } from "../lib/RSAKeyCreation";
 
@@ -8,30 +8,30 @@ export default function PasskeyGen() {
     const id = 12345; // Placeholder, see index.js
 
     function handleClick() {
-        function PasswordInput(props) {
-            return <input
-                type="text"
-                placeholder={props.placeholder || "Search..."}
-                onChange={props?.onChange}
-            />;
-        }
         BdApi.UI.showConfirmationModal(
             "Create Key",
-            <PasswordInput
-                placeholder="Enter password..."
-                onChange={event => {
-                    console.log(event.target.value);
-                    (async () => {
-                        const pubKey = await importStringToKey(pubKeyFile, 'public');
-                        const encryptedPassword = await encryptPassphrase(event.target.value, pubKey);
-                        fs.writeFileSync(`${pluginDirectory}/${id}.key`, encryptedPassword);
-                    })();
-                }}
-            />,
+            `This will generate an AES key that is encrypted with your public key. You can safely send this to the person you are currently messaging. ID: ${id}`,
             {
                 confirmText: "Create",
                 cancelText: "Cancel",
-                onConfirm: () => console.log("Pressed Create, notify to send key to user here."),
+                onConfirm: () => {
+                    (async () => {
+                        const pubKey = await importStringToKey(pubKeyFile, 'public');
+                        // Generate a new random key
+                        const aesKey = await window.crypto.subtle.generateKey(
+                            {
+                                name: "AES-GCM",
+                                length: 256,
+                            },
+                            true,
+                            ["encrypt", "decrypt"],
+                        );
+                        // Encrypt the new AES key
+                        const encryptedAESkey = await encryptAESKey(aesKey, pubKey);
+                        fs.writeFileSync(`${pluginDirectory}/${id}.key`, encryptedAESkey);
+                        BdApi.UI.showToast(`AES key encrypted and saved as ${id}.key`, { type: "success" });
+                    })();
+                },
                 onCancel: () => console.log("Pressed 'Cancel' or escape")
             }
         );
