@@ -9,7 +9,23 @@ import { ab2str, str2ab } from "./ArrayBuffer";
  * with an iv in a Uint8Array
  */
 export async function encryptMessage(key, message) {
-
+    // Generate a random IV
+    const iv = window.crypto.getRandomValues(new Uint8Array(12));
+    // Convert the message to an ArrayBuffer
+    const encodedMessage = new TextEncoder().encode(message);
+    // Encrypt the message using AES-GCM
+    const encrypted = await window.crypto.subtle.encrypt(
+        {
+            name: "AES-GCM",
+            iv: iv,
+        },
+        key,
+        encodedMessage
+    );
+    // Convert the ciphertext and IV to base64 strings
+    const ciphertext = ab2str(encrypted);
+    const ivString = btoa(ab2str(iv));
+    return { ciphertext: ciphertext, iv: ivString };
 }
 
 /**
@@ -20,5 +36,19 @@ export async function encryptMessage(key, message) {
  * @returns {Promise<string>} A promise resolving to a string of decrypted text
  */
 export async function decryptMessage(key, ciphertext, iv) {
-
+     // Decode the IV from base64
+     const decodedIV = str2ab(atob(iv));
+     // Convert the ciphertext from base64 to an ArrayBuffer
+     const decodedCiphertext = str2ab(ciphertext);
+     // Decrypt the ciphertext using AES-GCM
+     const decrypted = await window.crypto.subtle.decrypt(
+         {
+             name: "AES-GCM",
+             iv: decodedIV,
+         },
+         key,
+         decodedCiphertext
+     );
+     // Convert the decrypted message ArrayBuffer to a string
+     return new TextDecoder().decode(decrypted);
 } 

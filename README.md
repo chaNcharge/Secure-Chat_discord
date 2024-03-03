@@ -41,3 +41,16 @@ If you encounter any issues or have suggestions for improvements, please feel fr
 ## License
 
 Secure Discord is licensed under the [MIT License](LICENSE). Feel free to use, modify, and distribute this plugin as per the terms of the license.
+
+## Referance Links for Developers
+1. [BetterDiscord Plugin Developer Docs](https://docs.betterdiscord.app/plugins/)
+2. [BetterDiscord Github](https://github.com/BetterDiscord/BetterDiscord)
+3. [BetterDiscord Creating Plugin Developer Docs](https://docs.betterdiscord.app/plugins/basics/creating-a-plugin/)
+4. [Discord Support](https://support.discord.com/hc/en-us)
+5. [SubtleCypto Documentation](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/decrypt)
+6. [Node.js Encyption](https://www.sohamkamani.com/nodejs/rsa-encryption/)
+
+## Similar Projects if Interested
+
+1. [Discryptor](https://www.discryptor.io/)
+2. [DiscordCrypt](https://github.com/leogx9r/DiscordCrypt)
