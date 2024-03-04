@@ -9,23 +9,18 @@ import { ab2str, str2ab } from "./ArrayBuffer";
  * with an iv in a Uint8Array
  */
 export async function encryptMessage(key, message) {
-    // Generate a random IV
+    const encoded = getMessageEncoding(message);
+    // iv will be needed for decryption
     const iv = window.crypto.getRandomValues(new Uint8Array(12));
-    // Convert the message to an ArrayBuffer
-    const encodedMessage = new TextEncoder().encode(message);
-    // Encrypt the message using AES-GCM
-    const encrypted = await window.crypto.subtle.encrypt(
-        {
-            name: "AES-GCM",
-            iv: iv,
-        },
+    const ciphertext = await window.crypto.subtle.encrypt(
+        { name: "AES-GCM", iv: iv },
         key,
-        encodedMessage
-    );
-    // Convert the ciphertext and IV to base64 strings
-    const ciphertext = btoa(String.fromCharCode.apply(null, new Uint8Array(encrypted)));
-    const ivString = btoa(String.fromCharCode.apply(null, iv));
-    return { ciphertext: ciphertext, iv: ivString };
+        encoded,
+    )
+    return {
+        ciphertext: btoa(ab2str(ciphertext)),
+        iv: iv
+    };
 }
 
 /**
@@ -36,19 +31,7 @@ export async function encryptMessage(key, message) {
  * @returns {Promise<string>} A promise resolving to a string of decrypted text
  */
 export async function decryptMessage(key, ciphertext, iv) {
-     // Decode the IV from base64
-     const decodedIV = new Uint8Array(atob(iv).split("").map(char => char.charCodeAt(0)));
-     // Convert the ciphertext from base64 to an ArrayBuffer
-     const decodedCiphertext = new Uint8Array(atob(ciphertext).split("").map(char => char.charCodeAt(0)));
-     // Decrypt the ciphertext using AES-GCM
-     const decrypted = await window.crypto.subtle.decrypt(
-         {
-             name: "AES-GCM",
-             iv: decodedIV,
-         },
-         key,
-         decodedCiphertext
-     );
-     // Convert the decrypted message ArrayBuffer to a string
-     return new TextDecoder().decode(decrypted);
+    // The iv value is the same as that used for encryption
+    const textbuffer = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, key, str2ab(atob(ciphertext)));
+    return ab2str(textbuffer);
 } 
