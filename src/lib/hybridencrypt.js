@@ -35,3 +35,8 @@ export async function decryptMessage(key, ciphertext, iv) {
     const textbuffer = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, key, str2ab(atob(ciphertext)));
     return ab2str(textbuffer);
 } 
+
+function getMessageEncoding(message) {
+    let enc = new TextEncoder();
+    return enc.encode(message);
+}
