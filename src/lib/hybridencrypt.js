@@ -4,7 +4,7 @@ import { ab2str, str2ab } from "./ArrayBuffer";
  * Encrypt a message with an AES CryptoKey object
  * @param {CryptoKey} key 
  * @param {string} message 
- * @returns {Promise<{ciphertext: string, iv: Uint8Array}>} 
+ * @returns {Promise<{ciphertext: string, iv: number[]}>} 
  * A promise resolving to a an object of base64 encoded AES encrypted text
  * with an iv in a Uint8Array
  */
@@ -19,7 +19,7 @@ export async function encryptMessage(key, message) {
     )
     return {
         ciphertext: btoa(ab2str(ciphertext)),
-        iv: iv
+        iv: Array.from(iv)
     };
 }
 
@@ -27,12 +27,13 @@ export async function encryptMessage(key, message) {
  * Decrypt ciphertext with an AES CryptoKey object and iv
  * @param {CryptoKey} key 
  * @param {string} ciphertext 
- * @param {Uint8Array} iv 
+ * @param {number[]} iv 
  * @returns {Promise<string>} A promise resolving to a string of decrypted text
  */
 export async function decryptMessage(key, ciphertext, iv) {
     // The iv value is the same as that used for encryption
-    const textbuffer = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, key, str2ab(atob(ciphertext)));
+    const ivUint8 = new Uint8Array(iv);
+    const textbuffer = await window.crypto.subtle.decrypt({ name: "AES-GCM", iv: ivUint8 }, key, str2ab(atob(ciphertext)));
     return ab2str(textbuffer);
 } 
 
