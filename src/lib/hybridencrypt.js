@@ -23,8 +23,8 @@ export async function encryptMessage(key, message) {
         encodedMessage
     );
     // Convert the ciphertext and IV to base64 strings
-    const ciphertext = ab2str(encrypted);
-    const ivString = btoa(ab2str(iv));
+    const ciphertext = btoa(String.fromCharCode.apply(null, new Uint8Array(encrypted)));
+    const ivString = btoa(String.fromCharCode.apply(null, iv));
     return { ciphertext: ciphertext, iv: ivString };
 }
 
@@ -37,9 +37,9 @@ export async function encryptMessage(key, message) {
  */
 export async function decryptMessage(key, ciphertext, iv) {
      // Decode the IV from base64
-     const decodedIV = str2ab(atob(iv));
+     const decodedIV = new Uint8Array(atob(iv).split("").map(char => char.charCodeAt(0)));
      // Convert the ciphertext from base64 to an ArrayBuffer
-     const decodedCiphertext = str2ab(ciphertext);
+     const decodedCiphertext = new Uint8Array(atob(ciphertext).split("").map(char => char.charCodeAt(0)));
      // Decrypt the ciphertext using AES-GCM
      const decrypted = await window.crypto.subtle.decrypt(
          {
