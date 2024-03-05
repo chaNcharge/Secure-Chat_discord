@@ -5,9 +5,6 @@ import PluginButtons from "./components/PluginButtons";
 
 const pluginDirectory = BdApi.Plugins.folder + "/SecureChat";
 
-const element = BdApi.DOM.parseHTML("<div>");
-const target = document.querySelector("." + BdApi.Webpack.getByKeys("channelTextArea", "form")?.channelTextArea);
-
 const messageActions = BdApi.Webpack.getByKeys("sendMessage");
 const SelectedChannelStore = BdApi.Webpack.getStore("SelectedChannelStore");
 
@@ -17,6 +14,15 @@ function sendMessage(content) {
         invalidEmojis: [],
         tts: false,
         validNonShortcutEmojis: []
+    });
+}
+
+function createElements() {
+    const filter = BdApi.Webpack.Filters.byStrings("ChannelTextAreaButtons");
+    const ChannelTextAreaButtons = BdApi.Webpack.getModule(m => filter(m.type));
+    BdApi.Patcher.after("debug", ChannelTextAreaButtons, "type", (_, __, res) => {
+        const myElement = BdApi.React.createElement(PluginButtons);
+        res.props.children.push(myElement);
     });
 }
 
@@ -40,17 +46,15 @@ export default class SecureChat {
                 fs.writeFileSync(`${pluginDirectory}/public-${id}.pem`, publicKeyString);
                 fs.writeFileSync(`${pluginDirectory}/private-${id}.pem`, privateKeyString);
                 BdApi.alert("Key Pair Generated", "To begin end to end encryption, open the SecureChat folder in your plugins folder and send your **PUBLIC** key to who you want to begin E2EE with, then click on Create Password. **Never send your private key to anyone!**");
-                target.append(element);
-                BdApi.ReactDOM.render(BdApi.React.createElement(PasskeyGen), element);
+                createElements();
             })();
         } else {
-            target.append(element);
-            BdApi.ReactDOM.render(BdApi.React.createElement(PluginButtons), element);
+            createElements();
         }
     }
     stop() {
         // Called when the plugin is deactivated
-        BdApi.ReactDOM.unmountComponentAtNode(element);
+        BdApi.Patcher.unpatchAll("debug")
     }
 
     getSettingsPanel() {
