@@ -1,7 +1,7 @@
 import SettingsComponent from "./components/settingscomponent";
 import fs from "fs";
 import { createKeyPair, exportKeyToString, importStringToKey } from "./lib/RSAKeyCreation";
-import PasskeyGen from "./components/PasskeyGen";
+import PluginButtons from "./components/PluginButtons";
 
 const pluginDirectory = BdApi.Plugins.folder + "/SecureChat";
 
@@ -45,7 +45,7 @@ export default class SecureChat {
             })();
         } else {
             target.append(element);
-            BdApi.ReactDOM.render(BdApi.React.createElement(PasskeyGen), element);
+            BdApi.ReactDOM.render(BdApi.React.createElement(PluginButtons), element);
         }
     }
     stop() {
