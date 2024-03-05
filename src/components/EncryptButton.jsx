@@ -35,13 +35,13 @@ export default function EncryptButton() {
                 onChange={event => {
                     console.log(event.target.value);
                     (async () => {
-                        // TODO: only run this block of code if PRIVATE key is not present in pluginDirectory
+                        // TODO: only run this block of code if PRIVATE-<channel-id>.key is NOT present in pluginDirectory, non-private key is encrypted
                         const encryptedAESkey = fs.readFileSync(`${pluginDirectory}/${channelId}.key`, 'utf8');
                         const privKeyFile = fs.readFileSync(`${pluginDirectory}/private-${userId}.pem`, 'utf8');
                         const privKey = await importStringToKey(privKeyFile, 'private');
                         const decryptedAESkey = await decryptAESKey(encryptedAESkey, privKey)
                         
-                        const encryptedText = await encryptMessage(); //TODO: complete this with key file parsing
+                        const encryptedText = await encryptMessage(); //TODO: complete this with key file parsing with channel-id.key
                     })();
                 }}
             />,

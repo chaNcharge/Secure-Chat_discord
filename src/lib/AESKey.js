@@ -18,8 +18,6 @@ export async function encryptAESKey(aesKey, publicKey) {
         hash: { name: 'SHA-256' },
     }, publicKey, exportedKey);
     return btoa(ab2str(encryptedPassphraseBuffer));
-    //const encryptedPassphraseArray = new Uint8Array(encryptedPassphraseBuffer);
-    //return btoa(String.fromCharCode.apply(null, encryptedPassphraseArray));
 }
 
 /**
@@ -29,7 +27,6 @@ export async function encryptAESKey(aesKey, publicKey) {
  * @returns {Promise<CryptoKey>} A promise resolving to the decrypted passphrase
  */
 export async function decryptAESKey(encryptedAESKey, privateKey) {
-    //const encryptedAESKeyArray = new Uint8Array(atob(encryptedAESKey).split("").map(char => char.charCodeAt(0)));
     const encryptedAESKeyBuffer = str2ab(atob(encryptedAESKey));
     const decryptedAESKeyBuffer = await window.crypto.subtle.decrypt({
         name: 'RSA-OAEP',
@@ -42,4 +39,25 @@ export async function decryptAESKey(encryptedAESKey, privateKey) {
         true,
         ['encrypt', 'decrypt']
     );
+}
+
+/**
+ * Export the given key and write it into the "exported-key" space as a base64 encoded string.
+ */
+export async function exportAESKey(key) {
+    const exported = await window.crypto.subtle.exportKey("raw", key);
+    return btoa(ab2str(exported));
+}
+
+/**
+ * Import an AES secret key from a base64 encoded string containing the raw bytes.
+ * Takes an base64 encoded string containing the bytes, and returns a Promise
+ * that will resolve to a CryptoKey representing the secret key.
+ */
+export async function importAESKey(rawKey) {
+    const key = str2ab(atob(rawKey));
+    return window.crypto.subtle.importKey("raw", key, "AES-GCM", true, [
+        "encrypt",
+        "decrypt",
+    ]);
 }
