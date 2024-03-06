@@ -1,4 +1,3 @@
-import SettingsComponent from "./components/settingscomponent";
 import fs from "fs";
 import { createKeyPair, exportRSAKey } from "./lib/RSAKeyCreation";
 import PluginButtons from "./components/PluginButtons";
@@ -43,9 +42,5 @@ export default class SecureChat {
     stop() {
         // Called when the plugin is deactivated
         BdApi.Patcher.unpatchAll("debug")
-    }
-
-    getSettingsPanel() {
-        return SettingsComponent;
     }
 }

@@ -13,18 +13,10 @@ export function DecryptButton() {
     let ciphertextStr = "";
     function TextInput(props) {
         return <textarea
+            style={{ width: 'calc(100% - 4px)', height: '80px', resize: 'none' }}
             placeholder={props.placeholder || "Paste ciphertext JSON to decrypt"}
             onChange={props?.onChange}
         />;
-    }
-
-    function sendMessage(content) {
-        messageActions.sendMessage(SelectedChannelStore.getChannelId(), {
-            content,
-            invalidEmojis: [],
-            tts: false,
-            validNonShortcutEmojis: []
-        });
     }
 
     BdApi.UI.showConfirmationModal(

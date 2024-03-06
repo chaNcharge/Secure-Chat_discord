@@ -13,6 +13,7 @@ export function EncryptButton() {
     let message = "";
     function TextInput(props) {
         return <textarea
+            style={{ width: 'calc(100% - 4px)', height: '80px', resize: 'none'}}
             placeholder={props.placeholder || "Enter plaintext to encrypt"}
             onChange={props?.onChange}
         />;
