@@ -25,12 +25,12 @@ export async function createKeyPair(modulusLength) {
 }
 
 /**
- * Export key CryptoKey object to string
+ * Export key CryptoKey RSA object to string
  * @param {CryptoKey} key The CryptoKey object to export
  * @param {string} keyType Two options, "public" or "private" depending on type of key format
  * @returns {Promise<string>} A promise resolving to a string encoded in base64 of the key object
  */
-export async function exportKeyToString(key, keyType) {
+export async function exportRSAKey(key, keyType) {
     if (keyType === "public") {
         const exported = await window.crypto.subtle.exportKey("spki", key);
         const exportedAsString = ab2str(exported);
@@ -47,12 +47,12 @@ export async function exportKeyToString(key, keyType) {
 }
 
 /**
- * Import base64 encoded string of a CryptoKey object
+ * Import base64 encoded string of a CryptoKey RSA object
  * @param {string} pem A CryptoKey base64 encoded string
  * @param {string} keyType Two options, "public" or "private" depending on type of key format
  * @returns {Promise<CryptoKey>} A promise resolving to a CryptoKey object
  */
-export async function importStringToKey(pem, keyType) {
+export async function importRSAKey(pem, keyType) {
     // fetch the part of the PEM string between header and footer
     const pemHeader = keyType === "public" ? "-----BEGIN PUBLIC KEY-----" : "-----BEGIN PRIVATE KEY-----";
     const pemFooter = keyType === "public" ? "-----END PUBLIC KEY-----" : "-----END PRIVATE KEY-----";

@@ -1,7 +1,7 @@
 import fs from "fs";
 import { decryptMessage } from "../lib/hybridencrypt";
 import { decryptAESKey, importAESKey } from "../lib/AESKey";
-import { importStringToKey } from "../lib/RSAKeyCreation";
+import { importRSAKey } from "../lib/RSAKeyCreation";
 
 export function DecryptButton() {
     const pluginDirectory = BdApi.Plugins.folder + "/SecureChat";
@@ -54,7 +54,7 @@ export function DecryptButton() {
                                 console.log("Decrypting AES key");
                                 const encryptedAESkey = fs.readFileSync(`${pluginDirectory}/PUBLIC-${channelId}.key`, 'utf8');
                                 const privKeyFile = fs.readFileSync(`${pluginDirectory}/private-${userId}.pem`, 'utf8');
-                                const privKey = await importStringToKey(privKeyFile, 'private');
+                                const privKey = await importRSAKey(privKeyFile, 'private');
                                 const decryptedAESkey = await decryptAESKey(encryptedAESkey, privKey)
 
                                 const decryptedText = await decryptMessage(decryptedAESkey, ciphertextObj.ciphertext, ciphertextObj.iv);

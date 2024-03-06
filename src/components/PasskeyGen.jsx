@@ -1,6 +1,6 @@
 import fs from "fs";
 import { encryptAESKey, exportAESKey } from "../lib/AESKey";
-import { importStringToKey } from "../lib/RSAKeyCreation";
+import { importRSAKey } from "../lib/RSAKeyCreation";
 
 export function PasskeyGen() {
     const pluginDirectory = BdApi.Plugins.folder + "/SecureChat";
@@ -33,7 +33,7 @@ export function PasskeyGen() {
                             const reader = new FileReader();
                             reader.onload = async (event) => {
                                 const pubKeyFile = event.target.result; // Contents of the file
-                                const pubKey = await importStringToKey(pubKeyFile, 'public');
+                                const pubKey = await importRSAKey(pubKeyFile, 'public');
                                 // Generate a new random key
                                 const aesKey = await window.crypto.subtle.generateKey(
                                     {
