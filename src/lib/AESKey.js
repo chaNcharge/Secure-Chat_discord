@@ -43,6 +43,7 @@ export async function decryptAESKey(encryptedAESKey, privateKey) {
 
 /**
  * Export the given key and write it into the "exported-key" space as a base64 encoded string.
+ * Note this is not encrypted
  */
 export async function exportAESKey(key) {
     const exported = await window.crypto.subtle.exportKey("raw", key);
@@ -50,7 +51,7 @@ export async function exportAESKey(key) {
 }
 
 /**
- * Import an AES secret key from a base64 encoded string containing the raw bytes.
+ * Import an unencrypted raw AES secret key from a base64 encoded string containing the raw bytes.
  * Takes an base64 encoded string containing the bytes, and returns a Promise
  * that will resolve to a CryptoKey representing the secret key.
  */

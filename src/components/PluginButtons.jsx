@@ -1,3 +1,4 @@
+import DecryptButton from "./DecryptButton";
 import EncryptButton from "./EncryptButton";
 import PasskeyGen from "./PasskeyGen";
 
@@ -6,6 +7,7 @@ export default function PluginButtons() {
         <div>
             <PasskeyGen />
             <EncryptButton />
+            <DecryptButton />
         </div>
     )
 }
