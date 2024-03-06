@@ -6,7 +6,6 @@ import { importRSAKey } from "../lib/RSAKeyCreation";
 export function DecryptButton() {
     const pluginDirectory = BdApi.Plugins.folder + "/SecureChat";
     const SelectedChannelStore = BdApi.Webpack.getStore("SelectedChannelStore");
-    const messageActions = BdApi.Webpack.getByKeys("sendMessage");
     const userIdModule = BdApi.Webpack.getModule(BdApi.Webpack.Filters.byKeys("getCurrentUser"));
     let channelId = SelectedChannelStore.getChannelId();
     let userId = userIdModule.getCurrentUser().id;
