@@ -1,21 +1,9 @@
 import SettingsComponent from "./components/settingscomponent";
 import fs from "fs";
-import { createKeyPair, exportKeyToString, importStringToKey } from "./lib/RSAKeyCreation";
+import { createKeyPair, exportKeyToString } from "./lib/RSAKeyCreation";
 import PluginButtons from "./components/PluginButtons";
 
 const pluginDirectory = BdApi.Plugins.folder + "/SecureChat";
-
-const messageActions = BdApi.Webpack.getByKeys("sendMessage");
-const SelectedChannelStore = BdApi.Webpack.getStore("SelectedChannelStore");
-
-function sendMessage(content) {
-    messageActions.sendMessage(SelectedChannelStore.getChannelId(), {
-        content,
-        invalidEmojis: [],
-        tts: false,
-        validNonShortcutEmojis: []
-    });
-}
 
 function createElements() {
     const filter = BdApi.Webpack.Filters.byStrings("ChannelTextAreaButtons");

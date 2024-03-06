@@ -19,7 +19,7 @@ export async function createKeyPair(modulusLength) {
             hash: "SHA-256",
         },
         true,
-        ["encrypt", "decrypt", "wrapKey", "unwrapKey"],
+        ["encrypt", "decrypt"],
     );
     return keyPair;
 }
