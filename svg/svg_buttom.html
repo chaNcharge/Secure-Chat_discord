@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SVG Button with Context Menu</title>
 <style>
+  /* Set black background color */
+  body {
+    background-color: black; 
+  }
+  /* Set block around the button */
+  #button-container {
+    display: inline-block;
+    padding: 10px;
+    background-color: #383a40;
+  }
   #svg-button {
     display: inline-block;
     cursor: pointer;
@@ -13,10 +23,10 @@
 </head>
 <body>
 
-<!-- SVG Button -->
-<div id="svg-button" oncontextmenu="handleContextMenu(event)">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="-0.2 -1.2 19.4 21.4" width="30" height="30">
-    <path d="M 16 12 A 1 1 0 0 0 3 12 A 1 1 0 0 0 16 12 M 10 14 V 16 H 9 V 14 A 1 1 0 0 1 10 10 A 1 1 0 0 1 9 14 M 5 4 A 1 1 0 0 1 14 4 M 5 6 H 5 V 4 H 6 V 5.2 M 13 5 M 13 4 A 1 1 0 0 0 6 4 V 4.5 H 13 V 4 H 14 V 6 H 13 V 4 M 0 -1 V 20 H 19 V -1 H 0 M 2 13 A 1 1 0 0 1 17 11 A 1 1 0 0 1 2 13 M 10 14 H 9 V 14 A 1 1 0 0 1 10 10 A 1 1 0 0 0 9 14 M 4 12" stroke="#FFFFFFF" stroke-width="0.2" fill="#000000"/>
+<!-- Button Container with SVG Button -->
+<div id="button-container" oncontextmenu="handleContextMenu(event)">
+  <svg id="svg-button" xmlns="http://www.w3.org/2000/svg" viewBox="0 -1 20 22" width="50" height="50">
+    <path d="M 16 6 A 1 1 0 0 0 4 6 V 13 A 1 1 0 0 1 16 13 V 6 H 14 V 13 H 16 M 4 13 H 6 V 6 H 4 V 9 A 1 1 0 0 0 16 17 A 1 1 0 0 0 4 9 V 6 H 6 A 1 1 0 0 1 14 5 V 7 A 1 0.1 0 0 0 6 7 M 11 14 V 16 A 1 1 0 0 1 9 16 V 14 A 1 0.3 0 0 0 11 14 M 9 14 A 1 1 0 0 1 11 11 A 1 1 0 0 1 9 14 M 4 13 A 1 1 0 0 0 16 13 M 13 13 V 18 H 7 V 13 M 6 13 H 7 V 10 M 14 13 H 13 M 13 10 V 13 V 10 H 7" stroke="#7e8289" stroke-width="0.2" fill="#b5bac1"/>
   </svg>
 </div>
 
