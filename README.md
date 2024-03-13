@@ -19,6 +19,13 @@ To use Secure Discord, follow these steps:
 4. Restart Discord.
 5. Open a direct message and start using the secure text box provided by the plugin.
 
+### Build Instuctions (if needed)
+
+To rebuild the webpack if edited please run the fallowing in command line:
+
+1. npm install
+2. npm run build
+
 ## Usage
 
 Once installed, using Secure Discord is straightforward:
