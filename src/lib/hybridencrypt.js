@@ -1,12 +1,23 @@
+/**
+ * AES encryption and decryption functions for secure message transmission.
+ * 
+ * These functions provide encryption and decryption capabilities using the AES-GCM algorithm
+ * for secure message transmission over networks.
+ * 
+ * @module AESCrypt
+ * @author [Ethan Cha]
+ */
+
 import { ab2str, str2ab } from "./ArrayBuffer";
 
 /**
- * Encrypt a message with an AES CryptoKey object
- * @param {CryptoKey} key 
- * @param {string} message 
- * @returns {Promise<{ciphertext: string, iv: number[]}>} 
- * A promise resolving to a an object of base64 encoded AES encrypted text
- * with an iv in a Uint8Array
+ * Encrypts a message with an AES CryptoKey object.
+ * 
+ * @param {CryptoKey} key - The CryptoKey object used for encryption.
+ * @param {string} message - The message to be encrypted.
+ * @returns {Promise<{ciphertext: string, iv: number[]}>} - A promise resolving to an object
+ * containing the base64-encoded AES encrypted text (ciphertext) and the initialization vector (iv)
+ * in the form of an array of numbers.
  */
 export async function encryptMessage(key, message) {
     const encoded = getMessageEncoding(message);
@@ -24,11 +35,12 @@ export async function encryptMessage(key, message) {
 }
 
 /**
- * Decrypt ciphertext with an AES CryptoKey object and iv
- * @param {CryptoKey} key 
- * @param {string} ciphertext 
- * @param {number[]} iv 
- * @returns {Promise<string>} A promise resolving to a string of decrypted text
+ * Decrypts ciphertext with an AES CryptoKey object and iv.
+ * 
+ * @param {CryptoKey} key - The CryptoKey object used for decryption.
+ * @param {string} ciphertext - The base64-encoded ciphertext to be decrypted.
+ * @param {number[]} iv - The initialization vector used for encryption.
+ * @returns {Promise<string>} - A promise resolving to the decrypted text.
  */
 export async function decryptMessage(key, ciphertext, iv) {
     // The iv value is the same as that used for encryption

@@ -1,14 +1,24 @@
 /**
- * Most functions borrowed from examples at SubtleCrypto docs
+ * RSA key generation and key import/export functions using Web Crypto API's SubtleCrypto interface.
+ * 
+ * These functions provide the ability to generate RSA key pairs, export them to base64-encoded strings
+ * in PEM format, and import RSA keys from base64-encoded PEM strings.
+ * 
+ * Most functions are adapted from examples provided in the SubtleCrypto documentation.
  * https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto
+ * 
+ * @module RSAKeyUtils
+ * @author [Ethan Cha]
  */
+
 
 import { ab2str, str2ab } from "./ArrayBuffer";
 
 /**
- * Creates RSA keypair using Web Crypto API's SubtleCrypto interface.
- * @param {number} modulusLength The length of the modulus in bits
- * @returns {Promise<CryptoKeyPair>} A promise that resolves to an object containing the public and private keys
+ * Generates an RSA key pair using the Web Crypto API's SubtleCrypto interface.
+ * 
+ * @param {number} modulusLength - The length of the modulus in bits.
+ * @returns {Promise<CryptoKeyPair>} - A promise that resolves to an object containing the public and private keys.
  */
 export async function createKeyPair(modulusLength) {
     let keyPair = await window.crypto.subtle.generateKey(
@@ -25,10 +35,11 @@ export async function createKeyPair(modulusLength) {
 }
 
 /**
- * Export key CryptoKey RSA object to string
- * @param {CryptoKey} key The CryptoKey object to export
- * @param {string} keyType Two options, "public" or "private" depending on type of key format
- * @returns {Promise<string>} A promise resolving to a string encoded in base64 of the key object
+ * Exports an RSA key CryptoKey object to a base64-encoded string in PEM format.
+ * 
+ * @param {CryptoKey} key - The CryptoKey object to export.
+ * @param {string} keyType - Specifies whether the key is "public" or "private".
+ * @returns {Promise<string>} - A promise resolving to a base64-encoded string of the key object.
  */
 export async function exportRSAKey(key, keyType) {
     if (keyType === "public") {
@@ -47,10 +58,11 @@ export async function exportRSAKey(key, keyType) {
 }
 
 /**
- * Import base64 encoded string of a CryptoKey RSA object
- * @param {string} pem A CryptoKey base64 encoded string
- * @param {string} keyType Two options, "public" or "private" depending on type of key format
- * @returns {Promise<CryptoKey>} A promise resolving to a CryptoKey object
+ * Imports an RSA key from a base64-encoded string in PEM format.
+ * 
+ * @param {string} pem - A base64-encoded string representing the RSA key in PEM format.
+ * @param {string} keyType - Specifies whether the key is "public" or "private".
+ * @returns {Promise<CryptoKey>} - A promise resolving to a CryptoKey object.
  */
 export async function importRSAKey(pem, keyType) {
     // fetch the part of the PEM string between header and footer

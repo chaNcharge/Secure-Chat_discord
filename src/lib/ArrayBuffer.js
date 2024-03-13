@@ -1,5 +1,5 @@
 /*
-Descrition:
+Description:
     ab2str(buf): Converts an ArrayBuffer buf into a string. 
     It utilizes the String.fromCharCode method along with apply to achieve this conversion.
 
@@ -8,9 +8,9 @@ Descrition:
     then populates it with the UTF-8 character codes of the string using a Uint8Array.
 
 Author: Ethan Cha
-+/
+*/
 
-/*
+/**
  * Converts an ArrayBuffer into a string.
  * Adapted from: https://developer.chrome.com/blog/how-to-convert-arraybuffer-to-and-from-string/
  * 
@@ -21,7 +21,7 @@ export function ab2str(buf) {
     return String.fromCharCode.apply(null, new Uint8Array(buf));
 }
 
-/*
+/**
  * Converts a string into an ArrayBuffer.
  * Adapted from: https://developers.google.com/web/updates/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
  * 
