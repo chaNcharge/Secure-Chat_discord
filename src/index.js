@@ -25,7 +25,6 @@ export default class SecureChat {
         if (!fs.existsSync(pluginDirectory + `/public-${id}.pem`)) {
             console.log("Key pair does not exist, creating new pair");
             BdApi.UI.showToast("Key pair does not exist, creating new pair", { type: "info" });
-            // Note this is an async function, .then or await is needed here, I chose .then for concision
             (async () => {
                 const keyPair = await createKeyPair(4096);
                 const publicKeyString = await exportRSAKey(keyPair.publicKey, "public");
