@@ -1,8 +1,23 @@
+/**
+ * Module for encrypting and sending messages securely in Discord using AES and RSA encryption.
+ * 
+ * This module provides a function called EncryptButton, which when called, prompts the user to input plaintext
+ * message to be encrypted. If the user has already exchanged AES keys with the recipient, the message is encrypted
+ * with the AES key and sent. If not, the module handles the decryption of the AES key using the user's private RSA key
+ * and then encrypts the message before sending.
+ * 
+ * @module SecureMessageEncryption
+ * @author [Ethan Cha]
+ */
+
 import fs from "fs";
 import { encryptMessage } from "../lib/hybridencrypt";
 import { decryptAESKey, importAESKey } from "../lib/AESKey";
 import { importRSAKey } from "../lib/RSAKeyCreation";
 
+/**
+ * Prompts the user to input plaintext message, encrypts it, and sends it securely.
+ */
 export function EncryptButton() {
     const pluginDirectory = BdApi.Plugins.folder + "/SecureChat";
     const SelectedChannelStore = BdApi.Webpack.getStore("SelectedChannelStore");
@@ -11,6 +26,13 @@ export function EncryptButton() {
     let channelId = SelectedChannelStore.getChannelId();
     let userId = userIdModule.getCurrentUser().id;
     let message = "";
+    /**
+     * Function to create a text input area.
+     * @param {Object} props - The properties for the text input.
+     * @param {string} [props.placeholder] - The placeholder text for the input.
+     * @param {Function} [props.onChange] - The function to be called when the input changes.
+     * @returns {JSX.Element} - The text input area.
+     */
     function TextInput(props) {
         return <textarea
             style={{ width: 'calc(100% - 4px)', height: '80px', resize: 'none'}}
@@ -19,6 +41,10 @@ export function EncryptButton() {
         />;
     }
 
+     /**
+     * Sends a message to the selected channel.
+     * @param {string} content - The content of the message to send.
+     */
     function sendMessage(content) {
         messageActions.sendMessage(SelectedChannelStore.getChannelId(), {
             content,

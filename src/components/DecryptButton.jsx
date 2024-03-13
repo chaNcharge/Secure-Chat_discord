@@ -1,8 +1,23 @@
+/**
+ * Module for decrypting messages securely in Discord using AES and RSA encryption.
+ * 
+ * This module provides a function called DecryptButton, which when called, prompts the user to input ciphertext
+ * message to be decrypted. If the user has already exchanged AES keys with the sender, the ciphertext is decrypted
+ * with the AES key. If not, the module handles the decryption of the AES key using the user's private RSA key
+ * and then decrypts the ciphertext before displaying the plaintext message.
+ * 
+ * @module SecureMessageDecryption
+ * @author [Ethan Cha]
+ */
+
 import fs from "fs";
 import { decryptMessage } from "../lib/hybridencrypt";
 import { decryptAESKey, importAESKey } from "../lib/AESKey";
 import { importRSAKey } from "../lib/RSAKeyCreation";
 
+/**
+ * Prompts the user to input ciphertext message, decrypts it, and displays the plaintext message.
+ */
 export function DecryptButton() {
     const pluginDirectory = BdApi.Plugins.folder + "/SecureChat";
     const SelectedChannelStore = BdApi.Webpack.getStore("SelectedChannelStore");
@@ -10,6 +25,14 @@ export function DecryptButton() {
     let channelId = SelectedChannelStore.getChannelId();
     let userId = userIdModule.getCurrentUser().id;
     let ciphertextStr = "";
+    
+    /**
+     * Function to create a text input area for entering ciphertext.
+     * @param {Object} props - The properties for the text input.
+     * @param {string} [props.placeholder] - The placeholder text for the input.
+     * @param {Function} [props.onChange] - The function to be called when the input changes.
+     * @returns {JSX.Element} - The text input area.
+     */
     function TextInput(props) {
         return <textarea
             style={{ width: 'calc(100% - 4px)', height: '80px', resize: 'none' }}

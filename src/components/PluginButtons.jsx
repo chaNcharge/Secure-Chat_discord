@@ -1,8 +1,27 @@
+/**
+ * PluginButtons module provides functions to create buttons for encrypting, decrypting, and generating passkeys.
+ * Icon designed by Daniel Willard code by ethan Cha
+ * 
+ * @module PluginButtons
+ * @author [Ethan Cha, Daniel Willard]
+ */
+
 import { DecryptButton } from "./DecryptButton";
 import { EncryptButton } from "./EncryptButton";
 import { PasskeyGen } from "./PasskeyGen";
 
+
+/**
+ * Function to render a context menu with options for creating a key, encrypting text, and decrypting ciphertext.
+ * 
+ * @returns {JSX.Element} The rendered context menu.
+ */
 export default function PluginButtons() {
+    /**
+     * Function to render the context menu options.
+     * 
+     * @returns {ContextMenuOption[]} An array of context menu options.
+     */
     function renderContextMenu() {
         return BdApi.ContextMenu.buildMenu([
             {

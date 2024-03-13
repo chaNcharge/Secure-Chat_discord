@@ -1,7 +1,23 @@
+/**
+ * Generates a new AES key encrypted with the recipient's RSA public key for secure communication.
+ * This function prompts the user to upload the recipient's public key file, generates a new AES key,
+ * encrypts it with the public key, and saves the encrypted AES key locally.
+ * 
+ * @module PasskeyGen
+ * @author [Ethan Cha]
+ */
+
 import fs from "fs";
 import { encryptAESKey, exportAESKey } from "../lib/AESKey";
 import { importRSAKey } from "../lib/RSAKeyCreation";
 
+
+/**
+ * Function to generate a new AES key encrypted with the recipient's RSA public key.
+ * Prompts the user to upload the recipient's public key file and generates the AES key.
+ * 
+ * @returns {void}
+ */
 export function PasskeyGen() {
   const pluginDirectory = BdApi.Plugins.folder + "/SecureChat";
   const SelectedChannelStore = BdApi.Webpack.getStore("SelectedChannelStore");
