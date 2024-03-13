@@ -1,5 +1,24 @@
 {
     "name": "SecureChat",
-    "description": "Describe the basic functions. Maybe a support server link.",
-    "author": "Ethan Cha, Daniel Willard"
+    "displayName": "Secure Discord Plugin",
+    "version": "1.0.0",
+    "description": "A plugin for BetterDiscord that adds end-to-end encryption to direct messages, ensuring privacy and security.",
+    "author": {
+        "name": "Ethan Cha and Daniel Willard"
+    },
+    "license": "MIT",
+    "main": "secure-chat.js",
+    "dependencies": {},
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/yourusername/secure-chat-plugin.git"
+    },
+    "keywords": [
+        "discord",
+        "plugin",
+        "security",
+        "encryption",
+        "betterdiscord"
+    ]
+    
 }
