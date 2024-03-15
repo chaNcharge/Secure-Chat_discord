@@ -14,10 +14,13 @@ Secure Discord is a plugin for BetterDiscord, a popular Discord customization fr
 To use Secure Discord, follow these steps:
 
 1. Install BetterDiscord: [BetterDiscord](https://betterdiscord.app/)
-2. Download the Secure Discord plugin file (`secure-discord.js`).
-3. Place the plugin file in the BetterDiscord plugins folder.
-4. Restart Discord.
-5. Open a direct message and start using the secure text box provided by the plugin.
+2. Download the Secure Discord plugin file ([SecureChat.plugin.js](link/to/compiled/plugin/file)).
+3. Open Discord and go to 'SETTING->PLUGGINS"
+4. click the folder icon.
+5. Place SecureChat.plugin.js plugin file into the BetterDiscord plugins folder.
+6. Enable the SCureChat plugin.
+7. Restart Discord.
+8. Open a direct message and start using the secure text box provided by the plugin.
 
 ### Build Instuctions (if needed)
 
