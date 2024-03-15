@@ -15,8 +15,8 @@ To use Secure Discord, follow these steps:
 
 1. Install BetterDiscord: [BetterDiscord](https://betterdiscord.app/)
 2. Download the Secure Discord plugin file ([SecureChat.plugin.js](https://github.com/DJ-Willard/Secure-Chat_discord/blob/main/dist/SecureChat.plugin.js)).
-3. Open Discord and go to 'SETTING->PLUGGINS"
-4. click the folder icon.
+3. Open Discord and go to 'SETTINGS->PLUGINS"
+4. Click the folder icon.
 5. Place SecureChat.plugin.js plugin file into the BetterDiscord plugins folder.
 6. Enable the SCureChat plugin.
 7. Restart Discord.
