@@ -14,7 +14,7 @@ Secure Discord is a plugin for BetterDiscord, a popular Discord customization fr
 To use Secure Discord, follow these steps:
 
 1. Install BetterDiscord: [BetterDiscord](https://betterdiscord.app/)
-2. Download the Secure Discord plugin file ([SecureChat.plugin.js](link/to/compiled/plugin/file)).
+2. Download the Secure Discord plugin file ([SecureChat.plugin.js](https://github.com/DJ-Willard/Secure-Chat_discord/blob/main/dist/SecureChat.plugin.js)).
 3. Open Discord and go to 'SETTING->PLUGGINS"
 4. click the folder icon.
 5. Place SecureChat.plugin.js plugin file into the BetterDiscord plugins folder.
@@ -34,17 +34,22 @@ To rebuild the webpack if edited please run the fallowing in command line:
 Once installed, using Secure Discord is straightforward:
 
 1. Open a direct message with the user you want to communicate securely with.
-2. You will notice a new text box labeled "Secure Message" at the bottom of the chat interface.
-3. Type your message in the secure text box.
-4. Press Enter to send the encrypted message.
-5. The recipient will be able to decrypt and read the message using the Secure Discord plugin installed on their end.
+2. You will notice a new lock icon at the bottom  left of the chat interface.
+3. right click the icon to pull up the encryption menu
+4. left click generate key and load your friends requested  public key they send in the chat that you download.
+5.  inside of the directory 'C:\..\AppData\Roaming\BetterDiscord\plugins\SecureChat' send the public key generated. 
+6. the reciever should download the key and add it to the the fallowing directory  'C:\..\AppData\Roaming\BetterDiscord\plugins\SecureChat' it can be accessed in the "setting->Plugin' area if you are having difficultly finding it.
+7. Type your message in the secure text box provided after right clicking the icon and left clicking the encypt text.
+8. Press Enter to send the encrypted message.
+9.  The recipient will be able to decrypt and read the message using the Secure Discord plugin installed on their end by left clicking the copy icon on the sent message in the top right corner  and then pasting it into the decrypt text box after right clicking the icon and left clicking  decrypt ciphertext. 
 
 ## Contributions
 
 This plugin was developed by a team of two individuals:
 
-- **Project Manager:** [Daniel Willard]
-- **Primary Programmer and Researcher:** [Ethan Cha]
+- **Project Lead,  Programmer and Researcher:** [Ethan Cha]
+- **Project Documentation and icon builder:** [Daniel Willard]
+
 
 If you encounter any issues or have suggestions for improvements, please feel free to open an issue or submit a pull request on our GitHub repository.
 
