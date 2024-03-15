@@ -1,7 +1,8 @@
 /**
  * @name SecureChat
- * @description Describe the basic functions. Maybe a support server link.
- * @author Ethan Cha, Daniel Willard
+ * @description A plugin for Discord that uses the  BetterDiscord framework that adds end-to-end encryption to direct messages, ensuring privacy and security for private messages between users.
+ * @author [object Object]
+ * @source https://github.com/DJ-Willard/Secure-Chat_discord
  * @version 1.0.0
  */
 /******/ (() => { // webpackBootstrap
@@ -23,18 +24,41 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_hybridencrypt__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/hybridencrypt */ "./src/lib/hybridencrypt.js");
 /* harmony import */ var _lib_AESKey__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/AESKey */ "./src/lib/AESKey.js");
 /* harmony import */ var _lib_RSAKeyCreation__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/RSAKeyCreation */ "./src/lib/RSAKeyCreation.js");
+/**
+ * Module for decrypting messages securely in Discord using AES and RSA encryption.
+ * 
+ * This module provides a function called DecryptButton, which when called, prompts the user to input ciphertext
+ * message to be decrypted. If the user has already exchanged AES keys with the sender, the ciphertext is decrypted
+ * with the AES key. If not, the module handles the decryption of the AES key using the user's private RSA key
+ * and then decrypts the ciphertext before displaying the plaintext message.
+ * 
+ * @module SecureMessageDecryption
+ * @author [Ethan Cha]
+ */
 
 
 
 
+
+
+/**
+ * Prompts the user to input ciphertext message, decrypts it, and displays the plaintext message.
+ */
 function DecryptButton() {
   const pluginDirectory = BdApi.Plugins.folder + "/SecureChat";
   const SelectedChannelStore = BdApi.Webpack.getStore("SelectedChannelStore");
-  const messageActions = BdApi.Webpack.getByKeys("sendMessage");
   const userIdModule = BdApi.Webpack.getModule(BdApi.Webpack.Filters.byKeys("getCurrentUser"));
   let channelId = SelectedChannelStore.getChannelId();
   let userId = userIdModule.getCurrentUser().id;
   let ciphertextStr = "";
+
+  /**
+   * Function to create a text input area for entering ciphertext.
+   * @param {Object} props - The properties for the text input.
+   * @param {string} [props.placeholder] - The placeholder text for the input.
+   * @param {Function} [props.onChange] - The function to be called when the input changes.
+   * @returns {JSX.Element} - The text input area.
+   */
   function TextInput(props) {
     return BdApi.React.createElement("textarea", {
       style: {
@@ -105,10 +129,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_hybridencrypt__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/hybridencrypt */ "./src/lib/hybridencrypt.js");
 /* harmony import */ var _lib_AESKey__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/AESKey */ "./src/lib/AESKey.js");
 /* harmony import */ var _lib_RSAKeyCreation__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../lib/RSAKeyCreation */ "./src/lib/RSAKeyCreation.js");
+/**
+ * Module for encrypting and sending messages securely in Discord using AES and RSA encryption.
+ * 
+ * This module provides a function called EncryptButton, which when called, prompts the user to input plaintext
+ * message to be encrypted. If the user has already exchanged AES keys with the recipient, the message is encrypted
+ * with the AES key and sent. If not, the module handles the decryption of the AES key using the user's private RSA key
+ * and then encrypts the message before sending.
+ * 
+ * @module SecureMessageEncryption
+ * @author [Ethan Cha]
+ */
 
 
 
 
+
+
+/**
+ * Prompts the user to input plaintext message, encrypts it, and sends it securely.
+ */
 function EncryptButton() {
   const pluginDirectory = BdApi.Plugins.folder + "/SecureChat";
   const SelectedChannelStore = BdApi.Webpack.getStore("SelectedChannelStore");
@@ -117,6 +157,13 @@ function EncryptButton() {
   let channelId = SelectedChannelStore.getChannelId();
   let userId = userIdModule.getCurrentUser().id;
   let message = "";
+  /**
+   * Function to create a text input area.
+   * @param {Object} props - The properties for the text input.
+   * @param {string} [props.placeholder] - The placeholder text for the input.
+   * @param {Function} [props.onChange] - The function to be called when the input changes.
+   * @returns {JSX.Element} - The text input area.
+   */
   function TextInput(props) {
     return BdApi.React.createElement("textarea", {
       style: {
@@ -128,6 +175,11 @@ function EncryptButton() {
       onChange: props?.onChange
     });
   }
+
+  /**
+  * Sends a message to the selected channel.
+  * @param {string} content - The content of the message to send.
+  */
   function sendMessage(content) {
     messageActions.sendMessage(SelectedChannelStore.getChannelId(), {
       content,
@@ -189,9 +241,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(fs__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _lib_AESKey__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../lib/AESKey */ "./src/lib/AESKey.js");
 /* harmony import */ var _lib_RSAKeyCreation__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../lib/RSAKeyCreation */ "./src/lib/RSAKeyCreation.js");
+/**
+ * Generates a new AES key encrypted with the recipient's RSA public key for secure communication.
+ * This function prompts the user to upload the recipient's public key file, generates a new AES key,
+ * encrypts it with the public key, and saves the encrypted AES key locally.
+ * 
+ * @module PasskeyGen
+ * @author [Ethan Cha]
+ */
 
 
 
+
+
+/**
+ * Function to generate a new AES key encrypted with the recipient's RSA public key.
+ * Prompts the user to upload the recipient's public key file and generates the AES key.
+ * 
+ * @returns {void}
+ */
 function PasskeyGen() {
   const pluginDirectory = BdApi.Plugins.folder + "/SecureChat";
   const SelectedChannelStore = BdApi.Webpack.getStore("SelectedChannelStore");
@@ -265,10 +333,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _DecryptButton__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DecryptButton */ "./src/components/DecryptButton.jsx");
 /* harmony import */ var _EncryptButton__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./EncryptButton */ "./src/components/EncryptButton.jsx");
 /* harmony import */ var _PasskeyGen__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PasskeyGen */ "./src/components/PasskeyGen.jsx");
+/**
+ * PluginButtons module provides functions to create buttons for encrypting, decrypting, and generating passkeys.
+ * Icon designed by Daniel Willard code by ethan Cha
+ * 
+ * @module PluginButtons
+ * @author [Ethan Cha, Daniel Willard]
+ */
 
 
 
+
+
+/**
+ * Function to render a context menu with options for creating a key, encrypting text, and decrypting ciphertext.
+ * 
+ * @returns {JSX.Element} The rendered context menu.
+ */
 function PluginButtons() {
+  /**
+   * Function to render the context menu options.
+   * 
+   * @returns {ContextMenuOption[]} An array of context menu options.
+   */
   function renderContextMenu() {
     return BdApi.ContextMenu.buildMenu([{
       id: "create-key",
@@ -324,17 +411,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _ArrayBuffer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ArrayBuffer */ "./src/lib/ArrayBuffer.js");
 /**
- * Most functions borrowed from examples at SubtleCrypto docs
+ * Functions for encrypting and decrypting AES keys with RSA keys using the Web Crypto API's SubtleCrypto interface.
+ * 
+ * These functions allow for the encryption of AES keys using RSA public keys, as well as the decryption of AES keys
+ * using RSA private keys. Additionally, utility functions for exporting and importing AES keys in raw format are provided.
+ * 
+ * Most functions in this module are adapted from examples provided in the SubtleCrypto documentation.
  * https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto
+ * 
+ * @module AESKeyEncryption
+ * @author [Ethan Cha]
  */
 
 
 
 /**
- * Encrypt AES key with RSA public key using Web Crypto API's SubtleCrypto interface
- * @param {CryptoKey} aesKey The AES key to encrypt
- * @param {CryptoKey} publicKey The RSA public key for encryption
- * @returns {Promise<string>} A promise resolving to the encrypted key as a base64-encoded string
+ * Encrypts an AES key with an RSA public key using the Web Crypto API's SubtleCrypto interface.
+ * 
+ * @param {CryptoKey} aesKey - The AES key to encrypt.
+ * @param {CryptoKey} publicKey - The RSA public key for encryption.
+ * @returns {Promise<string>} - A promise resolving to the encrypted key as a base64-encoded string.
  */
 async function encryptAESKey(aesKey, publicKey) {
     const exportedKey = await window.crypto.subtle.exportKey('raw', aesKey);
@@ -345,11 +441,13 @@ async function encryptAESKey(aesKey, publicKey) {
     return btoa((0,_ArrayBuffer__WEBPACK_IMPORTED_MODULE_0__.ab2str)(encryptedPassphraseBuffer));
 }
 
+
 /**
- * Decrypt AES Key with RSA private key using Web Crypto API's SubtleCrypto interface
- * @param {string} encryptedAESKey The encrypted AES key as a base64-encoded string
- * @param {CryptoKey} privateKey The private key for decryption
- * @returns {Promise<CryptoKey>} A promise resolving to the decrypted passphrase
+ * Decrypts an AES key with an RSA private key using the Web Crypto API's SubtleCrypto interface.
+ * 
+ * @param {string} encryptedAESKey - The encrypted AES key as a base64-encoded string.
+ * @param {CryptoKey} privateKey - The private key for decryption.
+ * @returns {Promise<CryptoKey>} - A promise resolving to the decrypted passphrase.
  */
 async function decryptAESKey(encryptedAESKey, privateKey) {
     const encryptedAESKeyBuffer = (0,_ArrayBuffer__WEBPACK_IMPORTED_MODULE_0__.str2ab)(atob(encryptedAESKey));
@@ -367,8 +465,11 @@ async function decryptAESKey(encryptedAESKey, privateKey) {
 }
 
 /**
- * Export the given key and write it into the "exported-key" space as a base64 encoded string.
- * Note this is not encrypted
+ * Exports the given AES key and writes it into a base64-encoded string.
+ * Note that this export is not encrypted.
+ * 
+ * @param {CryptoKey} key - The AES key to export.
+ * @returns {Promise<string>} - A promise resolving to a base64-encoded string representing the AES key.
  */
 async function exportAESKey(key) {
     const exported = await window.crypto.subtle.exportKey("raw", key);
@@ -376,9 +477,10 @@ async function exportAESKey(key) {
 }
 
 /**
- * Import an unencrypted raw AES secret key from a base64 encoded string containing the raw bytes.
- * Takes an base64 encoded string containing the bytes, and returns a Promise
- * that will resolve to a CryptoKey representing the secret key.
+ * Imports an unencrypted raw AES secret key from a base64-encoded string containing the raw bytes.
+ * 
+ * @param {string} rawKey - The base64-encoded string containing the bytes of the AES key.
+ * @returns {Promise<CryptoKey>} - A promise resolving to a CryptoKey representing the imported AES key.
  */
 async function importAESKey(rawKey) {
     const key = (0,_ArrayBuffer__WEBPACK_IMPORTED_MODULE_0__.str2ab)(atob(rawKey));
@@ -401,18 +503,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   ab2str: () => (/* binding */ ab2str),
 /* harmony export */   str2ab: () => (/* binding */ str2ab)
 /* harmony export */ });
-/** 
-* Convert an ArrayBuffer into a string
-* from https://developer.chrome.com/blog/how-to-convert-arraybuffer-to-and-from-string/
+/*
+Description:
+    ab2str(buf): Converts an ArrayBuffer buf into a string. 
+    It utilizes the String.fromCharCode method along with apply to achieve this conversion.
+
+    str2ab(str): Converts a string str into an ArrayBuffer. 
+    It creates a new ArrayBuffer with a length equal to the length of the input string, 
+    then populates it with the UTF-8 character codes of the string using a Uint8Array.
+
+Author: Ethan Cha
 */
+
+/**
+ * Converts an ArrayBuffer into a string.
+ * Adapted from: https://developer.chrome.com/blog/how-to-convert-arraybuffer-to-and-from-string/
+ * 
+ * @param {ArrayBuffer} buf The ArrayBuffer to convert.
+ * @returns {string} The resulting string.
+ */
 function ab2str(buf) {
     return String.fromCharCode.apply(null, new Uint8Array(buf));
 }
 
-/*
-Convert a string into an ArrayBuffer
-from https://developers.google.com/web/updates/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
-*/
+/**
+ * Converts a string into an ArrayBuffer.
+ * Adapted from: https://developers.google.com/web/updates/2012/06/How-to-convert-ArrayBuffer-to-and-from-String
+ * 
+ * @param {string} str The string to convert.
+ * @returns {ArrayBuffer} The resulting ArrayBuffer.
+ */
 function str2ab(str) {
     const buf = new ArrayBuffer(str.length);
     const bufView = new Uint8Array(buf);
@@ -438,16 +558,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _ArrayBuffer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ArrayBuffer */ "./src/lib/ArrayBuffer.js");
 /**
- * Most functions borrowed from examples at SubtleCrypto docs
+ * RSA key generation and key import/export functions using Web Crypto API's SubtleCrypto interface.
+ * 
+ * These functions provide the ability to generate RSA key pairs, export them to base64-encoded strings
+ * in PEM format, and import RSA keys from base64-encoded PEM strings.
+ * 
+ * Most functions are adapted from examples provided in the SubtleCrypto documentation.
  * https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto
+ * 
+ * @module RSAKeyUtils
+ * @author [Ethan Cha]
  */
 
 
 
+
 /**
- * Creates RSA keypair using Web Crypto API's SubtleCrypto interface.
- * @param {number} modulusLength The length of the modulus in bits
- * @returns {Promise<CryptoKeyPair>} A promise that resolves to an object containing the public and private keys
+ * Generates an RSA key pair using the Web Crypto API's SubtleCrypto interface.
+ * 
+ * @param {number} modulusLength - The length of the modulus in bits.
+ * @returns {Promise<CryptoKeyPair>} - A promise that resolves to an object containing the public and private keys.
  */
 async function createKeyPair(modulusLength) {
     let keyPair = await window.crypto.subtle.generateKey(
@@ -464,10 +594,11 @@ async function createKeyPair(modulusLength) {
 }
 
 /**
- * Export key CryptoKey RSA object to string
- * @param {CryptoKey} key The CryptoKey object to export
- * @param {string} keyType Two options, "public" or "private" depending on type of key format
- * @returns {Promise<string>} A promise resolving to a string encoded in base64 of the key object
+ * Exports an RSA key CryptoKey object to a base64-encoded string in PEM format.
+ * 
+ * @param {CryptoKey} key - The CryptoKey object to export.
+ * @param {string} keyType - Specifies whether the key is "public" or "private".
+ * @returns {Promise<string>} - A promise resolving to a base64-encoded string of the key object.
  */
 async function exportRSAKey(key, keyType) {
     if (keyType === "public") {
@@ -486,10 +617,11 @@ async function exportRSAKey(key, keyType) {
 }
 
 /**
- * Import base64 encoded string of a CryptoKey RSA object
- * @param {string} pem A CryptoKey base64 encoded string
- * @param {string} keyType Two options, "public" or "private" depending on type of key format
- * @returns {Promise<CryptoKey>} A promise resolving to a CryptoKey object
+ * Imports an RSA key from a base64-encoded string in PEM format.
+ * 
+ * @param {string} pem - A base64-encoded string representing the RSA key in PEM format.
+ * @param {string} keyType - Specifies whether the key is "public" or "private".
+ * @returns {Promise<CryptoKey>} - A promise resolving to a CryptoKey object.
  */
 async function importRSAKey(pem, keyType) {
     // fetch the part of the PEM string between header and footer
@@ -530,15 +662,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   encryptMessage: () => (/* binding */ encryptMessage)
 /* harmony export */ });
 /* harmony import */ var _ArrayBuffer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ArrayBuffer */ "./src/lib/ArrayBuffer.js");
+/**
+ * AES encryption and decryption functions for secure message transmission.
+ * 
+ * These functions provide encryption and decryption capabilities using the AES-GCM algorithm
+ * for secure message transmission over networks.
+ * 
+ * @module AESCrypt
+ * @author [Ethan Cha]
+ */
+
 
 
 /**
- * Encrypt a message with an AES CryptoKey object
- * @param {CryptoKey} key 
- * @param {string} message 
- * @returns {Promise<{ciphertext: string, iv: number[]}>} 
- * A promise resolving to a an object of base64 encoded AES encrypted text
- * with an iv in a Uint8Array
+ * Encrypts a message with an AES CryptoKey object.
+ * 
+ * @param {CryptoKey} key - The CryptoKey object used for encryption.
+ * @param {string} message - The message to be encrypted.
+ * @returns {Promise<{ciphertext: string, iv: number[]}>} - A promise resolving to an object
+ * containing the base64-encoded AES encrypted text (ciphertext) and the initialization vector (iv)
+ * in the form of an array of numbers.
  */
 async function encryptMessage(key, message) {
     const encoded = getMessageEncoding(message);
@@ -556,11 +699,12 @@ async function encryptMessage(key, message) {
 }
 
 /**
- * Decrypt ciphertext with an AES CryptoKey object and iv
- * @param {CryptoKey} key 
- * @param {string} ciphertext 
- * @param {number[]} iv 
- * @returns {Promise<string>} A promise resolving to a string of decrypted text
+ * Decrypts ciphertext with an AES CryptoKey object and iv.
+ * 
+ * @param {CryptoKey} key - The CryptoKey object used for decryption.
+ * @param {string} ciphertext - The base64-encoded ciphertext to be decrypted.
+ * @param {number[]} iv - The initialization vector used for encryption.
+ * @returns {Promise<string>} - A promise resolving to the decrypted text.
  */
 async function decryptMessage(key, ciphertext, iv) {
     // The iv value is the same as that used for encryption
@@ -696,7 +840,6 @@ class SecureChat {
         if (!fs__WEBPACK_IMPORTED_MODULE_0___default().existsSync(pluginDirectory + `/public-${id}.pem`)) {
             console.log("Key pair does not exist, creating new pair");
             BdApi.UI.showToast("Key pair does not exist, creating new pair", { type: "info" });
-            // Note this is an async function, .then or await is needed here, I chose .then for concision
             (async () => {
                 const keyPair = await (0,_lib_RSAKeyCreation__WEBPACK_IMPORTED_MODULE_1__.createKeyPair)(4096);
                 const publicKeyString = await (0,_lib_RSAKeyCreation__WEBPACK_IMPORTED_MODULE_1__.exportRSAKey)(keyPair.publicKey, "public");
