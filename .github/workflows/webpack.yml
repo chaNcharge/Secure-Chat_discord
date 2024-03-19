@@ -30,7 +30,7 @@ jobs:
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v4.3.1
       with:
-        name: SecureChat.plugin.js
+        name: ${{ matrix.node-version }}SecureChat.plugin.js
         path: dist/SecureChat.plugin.js
         if-no-files-found: error
       
