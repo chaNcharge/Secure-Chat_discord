@@ -3,7 +3,7 @@
  * @description A plugin for Discord that uses the  BetterDiscord framework that adds end-to-end encryption to direct messages, ensuring privacy and security for private messages between users.
  * @author Ethan Cha, Daniel Willard
  * @source https://github.com/DJ-Willard/Secure-Chat_discord
- * @version 1.0.0
+ * @version 1.0.1
  */
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
