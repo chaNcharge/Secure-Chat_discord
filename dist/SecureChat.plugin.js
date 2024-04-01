@@ -820,7 +820,7 @@ __webpack_require__.r(__webpack_exports__);
 const pluginDirectory = BdApi.Plugins.folder + "/SecureChat";
 
 function createElements() {
-    const filter = BdApi.Webpack.Filters.byStrings("ChannelTextAreaButtons");
+    const filter = BdApi.Webpack.Filters.byStrings(".default.isSubmitButtonEnabled", ".default.getActiveCommand");
     const ChannelTextAreaButtons = BdApi.Webpack.getModule(m => filter(m.type));
     BdApi.Patcher.after("debug", ChannelTextAreaButtons, "type", (_, __, res) => {
         const myElement = BdApi.React.createElement(_components_PluginButtons__WEBPACK_IMPORTED_MODULE_2__["default"]);
@@ -858,6 +858,7 @@ class SecureChat {
         BdApi.Patcher.unpatchAll("debug")
     }
 }
+
 })();
 
 module.exports = __webpack_exports__["default"];
